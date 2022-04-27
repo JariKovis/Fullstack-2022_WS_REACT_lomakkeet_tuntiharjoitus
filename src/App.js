@@ -12,7 +12,7 @@ const App = () => {
     console.log("Tapahtuman aiheutti: ", event.target);
     console.log("Hakusana: ", query);
 
-    GetOneMovie();
+    GetOneMovie(query);
   };
 
   // Määritellään käsittelija napille 2 
@@ -38,7 +38,7 @@ const App = () => {
       });
   };
 
-  const GetOneMovie = () => {
+  const GetOneMovie = (query) => {
     fetch("http://localhost:8081/api/hae/" + query)
       .then((results) => {
         return results.json();
@@ -47,8 +47,7 @@ const App = () => {
         console.log("Haun tulokset", data);
         const items = data;
         console.log("One movie: ", data);
-
-        setResults(items)
+        setResults([items])
       });
   };
 
@@ -100,6 +99,7 @@ const App = () => {
             </tr>
           </thead>
           <tbody>
+
             {data.map((item, i) => (
               <tr>
                 <td key={i}> {item.title}</td>
@@ -132,7 +132,7 @@ const App = () => {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               className="form-control"
-              placeholder="Syötä hakutermi"
+              placeholder="Syötä id..."
               name="query"
             />
           </div>
