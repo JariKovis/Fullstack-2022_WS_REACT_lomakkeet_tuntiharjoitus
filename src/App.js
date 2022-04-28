@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import './index.css'
 
 
 const App = () => {
 
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
 
   // Määritellään käsittelija napille 1 
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("Tapahtuman aiheutti: ", event.target);
     console.log("Hakusana: ", query);
-
     GetOneMovie(query);
   };
 
@@ -19,27 +19,23 @@ const App = () => {
   const handleClick = (event) => {
     event.preventDefault();
     console.log("Tapahtuman aiheutti: ", event.target);
-
     GetMovieData();
   };
-
-  const [results, setResults] = useState([])
-
+  // Haetaan kaikki leffat  
   const GetMovieData = () => {
-    fetch("http://localhost:8081/api/leffat")
+    fetch("http://localhost:5000/api/leffat")
       .then((results) => {
         return results.json();
       })
       .then((data) => {
         console.log(data);
         const items = data;
-
         setResults(items)
       });
   };
-
+  // Haetaan yksi leffa id:n perusteella. 
   const GetOneMovie = (query) => {
-    fetch("http://localhost:8081/api/hae/" + query)
+    fetch("http://localhost:5000/api/hae/" + query)
       .then((results) => {
         return results.json();
       })
@@ -60,11 +56,12 @@ const App = () => {
     // Funktio tyhjien kuvien tsekkaamiseen
     const CheckPoster = (props) => {
       let poster = props.src;
-      // Jos kuvaa ei ole määritelty, korvataan se ikonilla
-      if (poster === "" || poster === null) {
+      // Jos kuvaa ei ole määritelty, korvataan se ikonilla if ()
+      if (poster === undefined || poster === null) {
         posterImg = "https://openvirtualworlds.org/omeka/files/fullsize/1/30/movie-big.jpg";
       } else {
         posterImg = poster;
+
       }
       // Palautetaan kuvatägi. onError suoritetaan jos kuvan lataus ei onnistu
       return (
@@ -77,13 +74,6 @@ const App = () => {
           width="50%"
         />
       );
-    };
-
-    //Yritetään asettaa rikkinäiseen kuvaan tyhjä ikoni tai edes poistaa src-tägistä kokonaan
-    const addDefaultSrc = (ev) => {
-      console.log(ev.target);
-      ev.target.src = "https://openvirtualworlds.org/omeka/files/fullsize/1/30/movie-big.jpg";
-      ev.onError = null;
     };
 
     return (
@@ -102,7 +92,7 @@ const App = () => {
 
             {data.map((item, i) => (
               <tr>
-                <td key={i}> {item.title}</td>
+                <td> {item.title}</td>
                 <td> {item.year} </td>
                 <td> {item.directors} </td>
                 <td> {item.imdb.rating}</td>
