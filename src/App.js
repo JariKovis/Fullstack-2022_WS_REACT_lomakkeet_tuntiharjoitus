@@ -4,7 +4,7 @@ import './index.css'
 
 const App = () => {
 
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState();
   const [results, setResults] = useState([]);
 
   // Määritellään käsittelija napille 1 
@@ -35,7 +35,7 @@ const App = () => {
   };
   // Haetaan yksi leffa id:n perusteella. 
   const GetOneMovie = (query) => {
-    fetch("http://localhost:5000/api/hae/" + query)
+    fetch("http://localhost:5000/api/name/" + query)
       .then((results) => {
         return results.json();
       })
@@ -66,6 +66,7 @@ const App = () => {
       // Palautetaan kuvatägi. onError suoritetaan jos kuvan lataus ei onnistu
       return (
         <img
+
           src={posterImg}
           alt="Poster"
           className="img-thumbnail"
@@ -80,7 +81,7 @@ const App = () => {
       <div>
         <table className="table table-striped table-bordered">
           <thead>
-            <tr key={props.id}>
+            <tr key={data.id}>
               <th scope="col">Title</th>
               <th scope="col">Year</th>
               <th scope="col">Directors</th>
@@ -90,14 +91,14 @@ const App = () => {
           </thead>
           <tbody>
 
-            {data.map((item, i) => (
-              <tr>
-                <td> {item.title}</td>
-                <td> {item.year} </td>
-                <td> {item.directors} </td>
-                <td> {item.imdb.rating}</td>
-                {/*  Luodaan kuvatägi komponentin sisältämässä funktiossa */}
-                <td id="pic">
+            {data.map((item) => (
+              <tr key={item.id}>
+                <td key={item.id}> {item.title}</td>
+                <td key={item.id}> {item.year} </td>
+                <td key={item.id}> {item.directors} </td>
+                <td key={item.id}> {item.imdb.rating}</td>
+
+                <td key={item.id} id="pic">
                   <CheckPoster src={item.poster} />
                 </td>
               </tr>
@@ -128,7 +129,7 @@ const App = () => {
           </div>
           <div className="form-group">
             <button type="submit" className="btn btn-primary">
-              Submit
+              Hae
             </button>
 
             <button
